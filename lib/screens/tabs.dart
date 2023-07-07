@@ -72,13 +72,21 @@ class _TabsScreenState extends State<TabsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final availableMeals = dummyMeals
-        .where((meal) =>
-            meal.isGlutenFree == _selectedFilters[Filter.glutenFree] &&
-            meal.isLactoseFree == _selectedFilters[Filter.lactoseFree] &&
-            meal.isVegetarian == _selectedFilters[Filter.vegetarian] &&
-            meal.isVegan == _selectedFilters[Filter.vegan])
-        .toList();
+    final availableMeals = dummyMeals.where((meal) {
+      if (_selectedFilters[Filter.glutenFree]! && !meal.isGlutenFree) {
+        return false;
+      }
+      if (_selectedFilters[Filter.lactoseFree]! && !meal.isLactoseFree) {
+        return false;
+      }
+      if (_selectedFilters[Filter.vegetarian]! && !meal.isVegetarian) {
+        return false;
+      }
+      if (_selectedFilters[Filter.vegan]! && !meal.isVegan) {
+        return false;
+      }
+      return true;
+    }).toList();
     Widget activePage = CategoriesScreen(
       onToggleFavoriteMeal: _toggleMealFavoriteStatus,
       availableMeals: availableMeals,
